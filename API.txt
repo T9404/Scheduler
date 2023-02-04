@@ -1,0 +1,391 @@
+Задача «Планировщик»
+Требования:
+1.	Создание события в календаре. На 1 час может быть только 1 событие
+2.	Удаление события из календаря
+3.	Редактирование событий в календаре (наименование события, описание, время и т.д.)
+4.	Просмотр всех событий пользователя (прошедших, предстоящих) за определенный период времени с сортировкой по дате
+5.	Просмотр ближайших актуальных событий
+6.	Делиться событиями с другими пользователями (доступ на просмотр). Проверка наличия событий на заданное время у пользователя, с которым делишься событием (время должно быть свободно)
+
+
+
+
+
+
+POST /users/registration – регистрация пользователя
+
+ans
+Http status 200
+[
+	"result" : "Пользователь успешно сохранён!"
+]	
+
+Http status 404 
+{
+	"message" : "Поле username не должно быть пустым!"
+}
+
+Http status 404 
+{
+	"message" : "Поле email не должно быть пустым!"
+}
+
+Http status 404 
+{
+	"message" : "Пользователь с такой почтой уже существует!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+GET /users/get?id={2} – получить пользователя по id
+
+ans
+Http status 200
+[
+{	
+"id": 2,
+    	"username": "Artem",
+   	 "email": "artem@gmail.com",
+    	"taskList": []
+}
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+DELETE /users/delete/{4} – удалить пользователя по id
+
+ans
+Http status 200
+[
+	"result" : "Пользователь успешно удалён!"	
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+PUT /users/changePassword/2?password=123qwerty123 – изменить пароль пользователя (пользователь по id)
+
+ans
+Http status 200
+[
+{
+   	 "id": 2,
+   	 "username": "Artem",
+   	 "email": "artem@gmail.com",
+    	"taskList": []
+}
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+POST /tasks/create?userId=2 – создать событие для пользователя (пользователь по id)
+
+ans
+Http status 200
+[
+{
+    	"id": 1,
+    	"title": "Поход в парк",
+    	"participants": "Вася, Ваня",
+    	"address": "пр-кт Ленина 41",
+    	"time": "12:00 02.02.2023",
+    	"description": "Гуляем с пацанами до утра",
+    	"completed": false,
+    	"owning": true
+}
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "На 1 час может быть только 1 событие"
+}
+
+Http status 404 
+{
+	"message" : "Выберите задачу с промежутком в 1 час"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+
+POST /tasks/suggest/{username}/{taskId} – предложить событие для пользователя (событие по id, пользователь по username)
+
+ans
+Http status 200
+[
+	"result" : "Задача успешна предложена!"
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "На 1 час может быть только 1 событие"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+PUT /tasks/complete?taskId=4 – выполнить событие (событие по id)
+
+ans
+Http status 200
+[
+{
+    	"id": 4,
+    	"title": "Родиться",
+    	"participants": "врачи какой-то больницы",
+    	"address": "ул. Носова",
+    	"time": "09:00 02.02.2000",
+    	"description": "Появиться на свет",
+    	"completed": true,
+   	 "owning": true
+}
+]	
+
+Http status 404 
+{
+	"message" : "Задача не найдена!"
+}
+
+Http status 404 
+{
+	"message" : "Редактировать можно только собственную задачу"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+DELETE /tasks/delete?taskId=4 – удалить событие (событие по id)
+
+ans
+Http status 200
+[
+	"result" : "4"
+]	
+
+Http status 404 
+{
+	"message" : "Задача не найдена!"
+}
+
+Http status 404 
+{
+	"message" : "Удалять можно только собственную задачу"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+PUT /tasks/modify?taskId=2 – изменить событие (событие по id)
+
+ans
+Http status 200
+[
+{
+  	  "id": 2,
+   	 "title": "Программирование",
+  	  "participants": "в солло",
+  	  "address": "в офисе",
+  	  "time": "21:00 02.02.2023",
+  	  "description": "Надо допилить проектик",
+  	  "completed": false,
+ 	   "owning": true
+}
+]	
+
+Http status 404 
+{
+	"message" : "Задача не найдена!"
+}
+
+Http status 404 
+{
+	"message" : "Изменять можно только собственную задачу"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+GET /tasks/getActual?userId=3 – получить все актуальные события пользователя (пользователь по id) 
+
+ans
+Http status 200
+[
+{
+  	  "id": 2,
+   	 "title": "Программирование",
+  	  "participants": "в солло",
+  	  "address": "в офисе",
+  	  "time": "21:00 03.02.2023",
+  	  "description": "Надо допилить проектик",
+  	  "completed": false,
+ 	   "owning": true
+}, …
+]	
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+GET /tasks/getBetween/2 – получить все события пользователя в заданном временном промежутке 
+(пользователь по id, время по json)
+
+ans
+Http status 200
+[
+{
+  	  "id": 2,
+   	 "title": "Программирование",
+  	  "participants": "в солло",
+  	  "address": "в офисе",
+  	  "time": "21:00 03.02.2023",
+  	  "description": "Надо допилить проектик",
+  	  "completed": false,
+ 	   "owning": true
+}, …
+]	
+
+Http status 404 
+{
+	"message" : "Неверный формат или несуществующее время"
+}
+
+Http status 404 
+{
+	"message" : "Пользователь не найден!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
+
+
+
+
+
+
+
+GET /tasks/getById/2– получить событие по id 
+
+ans
+Http status 200
+[
+{
+  	  "id": 2,
+   	 "title": "Программирование",
+  	  "participants": "в солло",
+  	  "address": "в офисе",
+  	  "time": "21:00 03.02.2023",
+  	  "description": "Надо допилить проектик",
+  	  "completed": false,
+ 	   "owning": true
+}
+]	
+
+Http status 404 
+{
+	"message" : "Задача не найдена!"
+}
+
+Http status 404 
+{
+	"message" : "Произошла ошибка"
+}
